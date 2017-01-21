@@ -1,5 +1,9 @@
 from flask import Flask, request, redirect
 import twilio.twiml
+from sympy import symbols,preview,Symbol
+from tempfile import NamedTemporaryFile
+from shutil import copyfileobj
+from PIL import Image
 # import httplib, urllib, base64
 
 #headers = {
@@ -43,7 +47,17 @@ def hello_monkey():
 
     resp = twilio.twiml.Response()
     msg = resp.message(mess)
-    msg.media("http://www.mathtran.org/cgi-bin/mathtran?D=15;tex=$x=1$")
+    
+    preview(r"$$\int_0^3 x^3 \,dx$$",viewer='file',filename='test.png',euler=False)
+    #tempFileObj = NamedTemporaryFile(suffix='png')
+    #pilImage = open('/home/linuxc/git-repos/pennapps/test.png','rb')
+    #copyfileobj(pilImage,tempFileObj)
+    #pilImage.close()
+    
+
+    #img = Image.open('test.png')
+    #msg.media(img)
+    msg.media('http://www.mathtran.org/cgi-bin/mathtran?D=15;tex=$x=1$')
     print(request.values['Body'])
     # 'http://www.mathtran.org/cgi-bin/mathtran?D=15;tex=$x=1$'
     
