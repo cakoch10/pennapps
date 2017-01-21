@@ -1,9 +1,12 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template_string, url_for
 import twilio.twiml
 from sympy import symbols,preview,Symbol
 from tempfile import NamedTemporaryFile
 from shutil import copyfileobj
 from PIL import Image
+import requests
+from io import BytesIO
+
 # import httplib, urllib, base64
 
 #headers = {
@@ -35,6 +38,11 @@ callers = {
     "+14158675311": "Virgil",
 }
 
+@app.route("/<path:path>")
+def showfile(path):
+    return url_for('static',filename=path)
+
+
 @app.route("/", methods=['GET', 'POST'])
 def hello_monkey():
     """Respond and greet the caller by name."""
@@ -48,7 +56,7 @@ def hello_monkey():
     resp = twilio.twiml.Response()
     msg = resp.message(mess)
     
-    preview(r"$$\int_0^3 x^3 \,dx$$",viewer='file',filename='test.png',euler=False)
+    preview(r"$$\int_0^3 x^3 \,dx$$",viewer='file',filename='static/test.png',euler=False)
     #tempFileObj = NamedTemporaryFile(suffix='png')
     #pilImage = open('/home/linuxc/git-repos/pennapps/test.png','rb')
     #copyfileobj(pilImage,tempFileObj)
@@ -57,7 +65,9 @@ def hello_monkey():
 
     #img = Image.open('test.png')
     #msg.media(img)
-    msg.media('http://www.mathtran.org/cgi-bin/mathtran?D=15;tex=$x=1$')
+    #response = requests.get('http://www.mathtran.org/cgi-bin/mathtran?D=15;tex=$x=1$')
+    #img = Image.open(BytesIO(response.content))
+    msg.media(showfile('test.png'))
     print(request.values['Body'])
     # 'http://www.mathtran.org/cgi-bin/mathtran?D=15;tex=$x=1$'
     
