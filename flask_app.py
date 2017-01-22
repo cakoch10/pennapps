@@ -14,45 +14,19 @@ def formula_as_file( formula, file, negate=False ):
     tfile = file
     if negate:
         tfile = 'tmp.png'
-    r = requests.get( 'http://latex.codecogs.com/png.latex?\dpi{300} \huge %s' % formula )
+    r = requests.get( 'http://latex.codecogs.com/png.latex?\dpi{500} %s' % formula )
     f = open( tfile, 'wb' )
     f.write( r.content )
     f.close()
     if negate:
+        os.system( 'convert tmp.png -colorspace sRGB -type truecolor %s' %file )
+        #os.system( 'convert tmp.png -colorspace rgb %s' %file ) <-Is grey then black
 	#os.system( 'convert tmp.png -negate -colorspace (255,255,255,255) %s' %file )
-        os.system( 'convert tmp.png -channel RGB -negate -colorspace rgb %s' %file )
-
-# import httplib, urllib, base64
-
-#headers = {
-#    # Request headers
-#    'Content-Type': 'application/json',
-#    'Ocp-Apim-Subscription-Key': '{subscription key}',
-#}
-
-#params = urllib.urlencode({
-#})
-
-#try:
-#    conn = httplib.HTTPSConnection('westus.api.cognitive.microsoft.com')
-#    conn.request("POST", "/emotion/v1.0/recognize?%s" % params, "{body}", headers)
-#    response = conn.getresponse()
-#    data = response.read()
-#    print(data)
-#    conn.close()
-#except Exception as e:
-#    print("[Errno {0}] {1}".format(e.errno, e.strerror))
-
+        #os.system( 'convert tmp.png -channel RGB -negate -colorspace rgb %s' %file )
 
 app = Flask(__name__)
 #app.config['IMAGES_PATH']='static'
 
-# Try adding your own number to this list!
-callers = {
-    "+14158675309": "Curious George",
-    "+14158675310": "Boots",
-    "+14158675311": "Virgil",
-}
 
 @app.route("/<path:path>")
 def showfile(path):
@@ -75,7 +49,7 @@ def hello_monkey():
     
     img = Image.open('static/' + title + '.png','r')
     img_w,img_h = img.size
-    background = Image.new('RGBA',(img_w+25,img_h+25),(255,255,255,255))
+    background = Image.new('RGBA',(img_w+100,img_h+100),(255,255,255,255))
     bg_w,bg_h = background.size
     offset = ((bg_w - img_w)/2,(bg_h - img_h)/2)
     background.paste(img,offset)
