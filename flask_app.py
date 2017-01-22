@@ -9,6 +9,7 @@ from flask_images import resized_img_src
 import os
 import random
 import string
+import converter
 
 dpiVal = 500
 
@@ -35,30 +36,31 @@ def hello_monkey():
 
     resp = twilio.twiml.Response()
     msg = resp.message("")
-    if request.values['Body'][0] == "$":
+    if isinstance(request.values['Body'],str) & request.values['Body'][0] == "$":
         length = len(request.values['Body'])
         body = request.values['Body'][1:length-2]
-	    title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-	    formula_as_file( r"" + body, "static/" + title + ".png", True)
-
-	    img = Image.open('static/' + title + '.png','r')
-	    img_w,img_h = img.size
-	    background = Image.new('RGBA',(img_w+100,img_h+100),(255,255,255,255))
-	    bg_w,bg_h = background.size
-	    offset = ((bg_w - img_w)/2,(bg_h - img_h)/2)
-	    background.paste(img,offset)
-	    title2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-	    background.save('static/' + title2 + '.png')
-	    img = Image.open('static/' + title2 + '.png')
-
-	    msg.media(showfile(title2 + '.png'))
-    print(request.values['Body'])
+        title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+        formula_as_file( r"" + body, "static/" + title + ".png", True)
+        img = Image.open('static/' + title + '.png','r')
+        img_w,img_h = img.size
+        background = Image.new('RGBA',(img_w+100,img_h+100),(255,255,255,255))
+        bg_w,bg_h = background.size
+        offset = ((bg_w - img_w)/2,(bg_h - img_h)/2)
+        background.paste(img,offset)
+        title2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+        background.save('static/' + title2 + '.png')
+        img = Image.open('static/' + title2 + '.png')
+        msg.media(showfile(title2 + '.png'))
 
     elif isinstance(request.values['Body'], int):
         dpiVal = request.values['Body']
 
     elif NumMedia > 0:
-        print hello
+        print "hello"
+        code = converter.main(request.values['Media'])
+        request.values['Body'] = code
+
+    print(request.values['Body'])
 
     return str(resp)
 
