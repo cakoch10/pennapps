@@ -53,8 +53,8 @@ def hello_monkey():
         msg.media(showfile(title2 + '.png'))
 
     elif NumMedia > 0:
-        print "hello"
         code = converter.main(request.values['Media'])
+        print code
         request.values['Body'] = code
 
     print(request.values['Body'])
