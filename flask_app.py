@@ -57,6 +57,9 @@ def hello_monkey():
     elif isinstance(request.values['Body'], int):
         dpiVal = request.values['Body']
 
+    elif NumMedia > 0:
+        print hello
+
     return str(resp)
 
 if __name__ == "__main__":
