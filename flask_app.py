@@ -10,13 +10,11 @@ import os
 import random
 import string
 
-dpiVal = 500
-
 def formula_as_file( formula, file, negate=False ):
     tfile = file
     if negate:
         tfile = 'tmp.png'
-    r = requests.get( 'http://latex.codecogs.com/png.latex?\dpi{dpiVal} %s' % formula )
+    r = requests.get( 'http://latex.codecogs.com/png.latex?\dpi{500} %s' % formula )
     f = open( tfile, 'wb' )
     f.write( r.content )
     f.close()
@@ -35,11 +33,12 @@ def hello_monkey():
 
     resp = twilio.twiml.Response()
     msg = resp.message("")
-    if isinstance(request.values['Body'],str) & request.values['Body'][0] == "$":
+    reqVals = request.values['Body']
+    if reqVals[0] == '$':
         length = len(request.values['Body'])
-        body = request.values['Body'][1:length-2]
+        body = request.values['Body'][1:length-1]
         title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-        formula_as_file( r"" + body, "static/" + title + ".png", True)
+        formula_as_file( r"" + body, "static/" + title + ".png", True )
         img = Image.open('static/' + title + '.png','r')
         img_w,img_h = img.size
         background = Image.new('RGBA',(img_w+100,img_h+100),(255,255,255,255))
@@ -50,9 +49,6 @@ def hello_monkey():
         background.save('static/' + title2 + '.png')
         img = Image.open('static/' + title2 + '.png')
         msg.media(showfile(title2 + '.png'))
-
-    elif isinstance(request.values['Body'], int):
-        dpiVal = request.values['Body']
 
     print(request.values['Body'])
 
