@@ -52,9 +52,12 @@ def hello_monkey():
         img = Image.open('static/' + title2 + '.png')
         msg.media(showfile(title2 + '.png'))
 
-    elif NumMedia > 0:
-        code = converter.main(request.values['Media'])
-        print code
+    elif request.form['NumMedia'] != '0':
+        with response.message() as message:
+            message.body = "Recieved."
+            url = message.media(request.form['MediaUrl0'])
+            code = converter.main(url);
+            
         request.values['Body'] = code
 
     print(request.values['Body'])
