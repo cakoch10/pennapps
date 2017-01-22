@@ -13,4 +13,4 @@ def main(Media med):
         files={'file': open(ABC.jpg, 'rb')},
         headers={"app_id": "4985f625", "app_key": "4423301b832793e217d04bc44eb041d3"})
     text = r.text
-    returnjson.dumps(json.loads(text), indent=4, sort_keys=True)
+    return json.dumps(json.loads(text), indent=4, sort_keys=True)
