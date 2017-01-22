@@ -52,9 +52,6 @@ def hello_monkey():
         img = Image.open('static/' + title2 + '.png')
         msg.media(showfile(title2 + '.png'))
 
-    elif isinstance(request.values['Body'], int):
-        dpiVal = request.values['Body']
-
     elif NumMedia > 0:
         print "hello"
         code = converter.main(request.values['Media'])
