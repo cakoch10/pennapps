@@ -9,6 +9,10 @@ from flask_images import resized_img_src
 import os
 import random
 import string
+#from urllib.parse import urlparse
+#from urlparse import urlparse
+
+#import converter
 
 def formula_as_file( formula, file, negate=False ):
     tfile = file
@@ -34,7 +38,7 @@ def hello_monkey():
     resp = twilio.twiml.Response()
     msg = resp.message("")
     reqVals = request.values['Body']
-    if reqVals[0] == '$':
+    if request.form['NumMedia'] == '0':
         length = len(request.values['Body'])
         body = request.values['Body'][1:length-1]
         title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
@@ -49,6 +53,15 @@ def hello_monkey():
         background.save('static/' + title2 + '.png')
         img = Image.open('static/' + title2 + '.png')
         msg.media(showfile(title2 + '.png'))
+
+#    elif request.form['NumMedia'] != '0':
+#        with resp.message() as message:
+#            message.body = "Recieved."
+#            url = message.media(request.form['MediaUrl0'])
+#            parsed = urlparse(url)
+#            code = converter.main(parsed);
+
+        #request.values['Body'] = code
 
     print(request.values['Body'])
 
